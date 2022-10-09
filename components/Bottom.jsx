@@ -26,14 +26,14 @@ export default function Bottom() {
 	return (
 		<div className='bg-[#222222] p-5 text-white'>
 			<footer className='bottom-0 container '>
-				<div className='flex flex-row justify-between '>
-					<div className=' text-white flex flex-col flex-1'>
+				<div className='flex lg:flex-row flex-col justify-between '>
+					<div className='mb-3 text-white flex flex-col flex-1'>
 						<p>Gelastraße 92</p>
 						<p>60388 Frankfurt am Main</p>
 						<p>hello@fleksa.com</p>
 						<p>+49 69120063308</p>
 					</div>
-					<div className='flex flex-col items-center justify-center gap-2 flex-1'>
+					<div className='flex mb-3 flex-col items-center justify-center gap-2 flex-1'>
 						<h5 className='m-0 p-0'>Online ordering System</h5>
 						<p className='m-0 p-0'>powered By</p>
 						<Image
@@ -44,7 +44,7 @@ export default function Bottom() {
 							className='m-0 p-0'
 						/>
 					</div>
-					<div className='flex flex-col gap-3 justify-center flex-1'>
+					<div className='flex flex-col mb-3 gap-3 justify-center flex-1'>
 						<div className='flex flex-row gap-3 justify-center'>
 							<div className='border border-white rounded-full w-[40px] h-[40px] flex items-center'>
 								<FiTwitter size={25} className='m-1 mx-auto' />

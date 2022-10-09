@@ -265,7 +265,7 @@ export default function Menu() {
 					<div className='sticky top-20'>
 						<h4 className='text-center'>Your Cart</h4>
 						<div className=' min-h-[80vh]'>
-							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 lg:h-[80vh] lg:flex-col lg:pb-6'>
+							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 h-[80vh] flex-col lg:pb-6'>
 								<div className='overflow-y-auto'>
 									{cart.map((item, key) => (
 										<div
