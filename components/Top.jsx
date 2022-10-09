@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Top() {
 	return (
-		<div className='bg-white h-[80px]  flex gap-4 justify-between px-5 sticky top-0 z-10'>
+		<div className='bg-white h-[80px] hidden lg:flex gap-4 justify-between px-5 sticky top-0 z-10'>
 			<div className=' grid  justify-center items-center ml-4'>
 				<div className='flex justify-center'>
 					<Image

@@ -12,6 +12,7 @@ import {
 	addToCart,
 } from '../../store/cart.slice';
 import { Waypoint } from 'react-waypoint';
+import { BsArrowLeft } from 'react-icons/bs';
 export default function Menu() {
 	const [menuList, setMenuList] = useState(null);
 	const getMenu = async () => {
@@ -70,7 +71,7 @@ export default function Menu() {
 	return (
 		<div className='min-h-screen'>
 			<p className='lg:hidden flex items-center gap-2 truncate w-9/12 absolute top-[10px] left-[8px] font-bold z-10'>
-				<span className='icon-arrow-up rotate-[270deg] text-2xl shadow-3xl text-white'></span>
+				<BsArrowLeft color='white' size={'20'} />
 				<span className='text-white text-sm font-normal'>Back</span>
 			</p>
 			<div className='h-[500px] relative border-b-2 lg:h-[400px] mb-20'>
@@ -162,10 +163,10 @@ export default function Menu() {
 				</div>
 			</div>
 
-			<div className='flex justify-between'>
-				<div className='flex flex-col w-1/4'>
+			<div className='flex justify-between flex-col lg:flex-row'>
+				<div className='flex flex-col lg:w-1/4 w-full'>
 					<div className='sticky top-20'>
-						<div className=' min-h-[80vh] justify-end'>
+						<div className=' lg:min-h-[80vh] justify-end'>
 							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 lg:h-[80vh] lg:flex-col items-end lg:pb-6'>
 								{menuList?.categories?.map((data, k) => (
 									<p
@@ -181,8 +182,8 @@ export default function Menu() {
 						</div>
 					</div>
 				</div>
-				<div className='flex flex-col flex-1'>
-					<div className='m-5'>
+				<div className='flex flex-col flex-1 '>
+					<div className='lg:m-5'>
 						{menuList?.categories?.map((data, k) => (
 							<div className='text-black' key={k} id={`list-${data.id}`}>
 								<Waypoint
@@ -260,7 +261,7 @@ export default function Menu() {
 						))}
 					</div>
 				</div>
-				<div className='flex flex-col w-1/3 '>
+				<div className='flex flex-col lg:w-1/3 w-full'>
 					<div className='sticky top-20'>
 						<h4 className='text-center'>Your Cart</h4>
 						<div className=' min-h-[80vh]'>
