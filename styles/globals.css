@@ -80,7 +80,7 @@
 }
 .menu-list {
 	margin: 0px 0.5rem;
-	min-width: 100px;
+	min-width: 120px;
 	padding: 4px;
 	transition: all 0.1s ease-in 0s;
 	border: none;
