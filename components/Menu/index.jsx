@@ -104,7 +104,7 @@ export default function Menu() {
 
 	return (
 		<div className='min-h-screen'>
-			<p className='lg:hidden flex items-center gap-2 truncate w-9/12 absolute top-[10px] left-[8px] font-bold z-10'>
+			<p className='lg:hidden flex items-center gap-2 truncate w-9/12 absolute top-[10px] mb-3 left-[8px] font-bold z-10'>
 				<BsArrowLeft color='white' size={'20'} />
 				<span className='text-white text-sm font-normal'>Back</span>
 			</p>
@@ -120,9 +120,9 @@ export default function Menu() {
 				<div className='banner-section'>
 					<div className='w-full'>
 						<div className='container p-3 mx-auto'>
-							<div className='flex justify-between'>
+							<div className='flex lg:flex-row flex-col justify-between'>
 								<div className=''>
-									<h1 className='font-semibold sm:text-3xl md:text-4xl lg:text-5xl'>
+									<h1 className='font-semibold sm:text-3xl mt-5 md:text-4xl lg:text-5xl'>
 										Good Taste
 									</h1>
 									<p className='pb-4'>Food and drink1</p>
