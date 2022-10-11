@@ -15,10 +15,13 @@ import { Waypoint } from 'react-waypoint';
 import { BsArrowLeft } from 'react-icons/bs';
 export default function Menu() {
 	const [menuList, setMenuList] = useState(null);
+	const [productList, setProductList] = useState(null);
+
 	const getMenu = async () => {
 		let response = await fetch('https://myqa.fleksa.com/pyapi/43/menu');
 		let data = await response.json();
 		setMenuList(data);
+		setProductList(data);
 	};
 	useEffect(() => {
 		getMenu();
@@ -30,10 +33,12 @@ export default function Menu() {
 	const dispatch = useDispatch();
 
 	const getTotalPrice = () => {
-		return cart.reduce(
-			(accumulator, item) => accumulator + item.quantity * item.price,
-			0
-		);
+		return cart
+			.reduce(
+				(accumulator, item) => accumulator + item.quantity * item.price,
+				0
+			)
+			.toFixed(2);
 	};
 
 	const findProduct = (cart, id) => {
@@ -42,6 +47,18 @@ export default function Menu() {
 			return filteredResult;
 		}
 		return null;
+	};
+
+	const searchProduct = (menuList, e) => {
+		if (e) {
+			console.log('menuList', menuList);
+			const filteredResult = menuList.categories.find(
+				(pro) => pro.name_json.english == e
+			);
+			console.log('filteredResult', filteredResult);
+		} else {
+			setProductList(menuList);
+		}
 	};
 
 	useEffect(() => {
@@ -168,6 +185,32 @@ export default function Menu() {
 					<div className='sticky top-20'>
 						<div className=' lg:min-h-[80vh] justify-end'>
 							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 lg:h-[80vh] lg:flex-col items-end lg:pb-6'>
+								<div className='lg:flex hidden items-center shrink-0 lg:justify-end mb-4 mr-2 '>
+									<div className='relative'>
+										<span className='absolute inset-y-0 left-0 flex items-center pl-2'>
+											<button
+												type='button'
+												title='search'
+												className='p-1 focus:outline-none focus:ring'
+											>
+												<svg
+													fill='currentColor'
+													viewBox='0 0 512 512'
+													className='w-4 h-4 text-gray-800'
+												>
+													<path d='M479.6,399.716l-81.084-81.084-62.368-25.767A175.014,175.014,0,0,0,368,192c0-97.047-78.953-176-176-176S16,94.953,16,192,94.953,368,192,368a175.034,175.034,0,0,0,101.619-32.377l25.7,62.2L400.4,478.911a56,56,0,1,0,79.2-79.195ZM48,192c0-79.4,64.6-144,144-144s144,64.6,144,144S271.4,336,192,336,48,271.4,48,192ZM456.971,456.284a24.028,24.028,0,0,1-33.942,0l-76.572-76.572-23.894-57.835L380.4,345.771l76.573,76.572A24.028,24.028,0,0,1,456.971,456.284Z'></path>
+												</svg>
+											</button>
+										</span>
+										<input
+											type='search'
+											name='Search'
+											placeholder='Search...'
+											onChange={(e) => searchProduct(menuList, e.target.value)}
+											className='w-32 py-2 pl-10 text-sm rounded-md sm:w-auto focus:outline-none bg-gray-100 text-gray-800 focus:bg-gray-50 focus:border-violet-600'
+										/>
+									</div>
+								</div>
 								{menuList?.categories?.map((data, k) => (
 									<p
 										id={`category-${data.id}`}
@@ -184,7 +227,7 @@ export default function Menu() {
 				</div>
 				<div className='flex flex-col flex-1 '>
 					<div className='lg:m-5'>
-						{menuList?.categories?.map((data, k) => (
+						{productList?.categories?.map((data, k) => (
 							<div className='text-black' key={k} id={`list-${data.id}`}>
 								<Waypoint
 									onEnter={() => addClass(`category-${data.id}`)}
@@ -198,9 +241,9 @@ export default function Menu() {
 										key={p}
 										className='flex justify-between border-t-2 px-3 my-4 hover:shadow-md hover:ease-in-out'
 									>
-										<div className='flex flex-col mt-3'>
+										<div className='flex flex-col mt-3 w-8/12'>
 											{pro.is_popular ? (
-												<div className='bg-gray-500 dark:bg-gray-800 h-6 w-20 mb-4 md:mb-0 rounded-full flex items-center justify-center'>
+												<div className='mb-2 max-w-[70px] text-white bg-black py-[1px] rounded flex items-center justify-center gap-1'>
 													<FiStar size={12} color='white' className='mr-1' />
 													<span className='text-xs text-white font-normal'>
 														Popular
@@ -208,7 +251,9 @@ export default function Menu() {
 												</div>
 											) : null}
 											<h5 className='mb-1'>{pro.name_json.english}</h5>
-											<small>{pro.description_json.english}</small>
+											<small className='mr-5'>
+												{pro.description_json.english}
+											</small>
 											<p>
 												<strong>{pro.price} €</strong>
 											</p>
@@ -265,12 +310,12 @@ export default function Menu() {
 					<div className='sticky top-20'>
 						<h4 className='text-center'>Your Cart</h4>
 						<div className=' min-h-[80vh]'>
-							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 h-[80vh] flex-col lg:pb-6'>
+							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 h-[95vh] flex-col lg:pb-6'>
 								<div className='overflow-y-auto'>
 									{cart.map((item, key) => (
 										<div
 											key={key}
-											className='flex items-center justify-between m-0 py-1 lg:py-2 '
+											className='flex items-center justify-between m-0 mr-3 py-1 lg:py-2 '
 											title=''
 										>
 											<div className='w-9/12 pr-2 align-left'>
@@ -303,11 +348,23 @@ export default function Menu() {
 										</div>
 									))}
 								</div>
-								<div className='flex justify-between px-2 lg:px-0 items-center border-b pb-2'>
-									<p className='font-bold'>Total</p>
-									<p className='font-bold'>{getTotalPrice()} €</p>
-								</div>
-								<p className='checkout-button'>Checkout</p>
+								{cart.length > 0 ? (
+									<div>
+										<div className='flex justify-between px-2 lg:px-0 items-center border-b mr-3  pb-2'>
+											<p className='font-bold'>Total</p>
+											<p className='font-bold '>{getTotalPrice()} €</p>
+										</div>
+										<p className='checkout-button'>Checkout</p>
+									</div>
+								) : (
+									<div>
+										<img src='/assets/cart-empty.svg' alt='Empty-cart' />
+										<p className='text-sm sm:text-lg text-center text-gray-500 pt-4'>
+											Please select at least one product to place an order
+										</p>
+									</div>
+								)}
+
 								<div className='flex justify-evenly text-2xl md:flex py-4'>
 									<div className='text-3xl flex items-center justify-evenly'>
 										<img src='/assets/visa.svg' alt='visa' width='30px' />
