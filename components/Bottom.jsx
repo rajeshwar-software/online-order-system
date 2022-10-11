@@ -88,7 +88,7 @@ export default function Bottom() {
 					</div>
 				</div>
 			</footer>
-			<div className='top-to-btm'>
+			<div className='top-to-btm hidden lg:block'>
 				{showTopBtn && (
 					<BsArrowUpShort
 						color='black'

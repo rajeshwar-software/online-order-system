@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiClock, FiMinus, FiPlus, FiStar } from 'react-icons/fi';
 import Image from 'next/image';
 import { HiTag } from 'react-icons/hi';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import { FaPlus, FaMinus, FaTimes } from 'react-icons/fa';
+import { FiShoppingBag } from 'react-icons/fi';
 import {
 	incrementQuantity,
 	decrementQuantity,
@@ -16,6 +17,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 export default function Menu() {
 	const [menuList, setMenuList] = useState(null);
 	const [productList, setProductList] = useState(null);
+	const [showOrders, setShowOrders] = useState(false);
 
 	const getMenu = async () => {
 		let response = await fetch('https://myqa.fleksa.com/pyapi/43/menu');
@@ -49,20 +51,33 @@ export default function Menu() {
 		return null;
 	};
 
-	const searchProduct = (menuList, e) => {
-		if (e) {
-			console.log('menuList', menuList);
-			const filteredResult = menuList.categories.find(
-				(pro) => pro.name_json.english == e
-			);
-			console.log('filteredResult', filteredResult);
+	const searchProduct = (menuList, keyword) => {
+		if (keyword) {
+			const category = menuList.categories;
+
+			const filteredArray = category.filter((element) => {
+				if (element.name_json.english.toLowerCase() === keyword.toLowerCase()) {
+					return true;
+				}
+
+				return false;
+			});
+
+			console.log(filteredArray);
+			setProductList(filteredArray);
+			// console.log('menuList', menuList);
+			// console.log('e', e);
+
+			// console.log('category', category);
+			// const found = category.some((cat) => cat.name_json.english === keyword);
+			// console.log('found', found);
 		} else {
 			setProductList(menuList);
 		}
 	};
 
 	useEffect(() => {
-		console.log('cart', cart);
+		// console.log('cart', cart);
 	}, [cart]);
 
 	const addClass = (val) => {
@@ -71,14 +86,16 @@ export default function Menu() {
 			y[0].classList.remove('active-category');
 		}
 		document.querySelector(`#${val}`).classList.add('active-category');
+		const violation = document.getElementById(val);
 
-		// element.classList.remove('class-1');
+		// element.classList.remove('className-1');
 	};
 	const removeClass = (val) => {
-		console.log('val', val);
+		// console.log('val', val);
 	};
 	const gotoSelected = (val) => {
 		const violation = document.getElementById(val);
+		console.log('violation', violation);
 		window.scrollTo({
 			top: violation.offsetTop,
 			behavior: 'smooth',
@@ -91,7 +108,7 @@ export default function Menu() {
 				<BsArrowLeft color='white' size={'20'} />
 				<span className='text-white text-sm font-normal'>Back</span>
 			</p>
-			<div className='h-[500px] relative border-b-2 lg:h-[400px] mb-20'>
+			<div className='h-[500px] relative border-b-2 lg:h-[400px] lg:mb-20'>
 				<Image
 					alt='bg'
 					src={
@@ -179,11 +196,36 @@ export default function Menu() {
 					</div>
 				</div>
 			</div>
+			<div className='block lg:hidden'>
+				<div className='flex justify-evenly text-2xl md:flex py-4'>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/visa.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/sofort.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/paypal.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/google-pay.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/mastercard.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/apple-pay.svg' alt='visa' width='30px' />
+					</div>
+					<div className='text-3xl flex items-center justify-evenly'>
+						<img src='/assets/euro.svg' alt='visa' width='30px' />
+					</div>
+				</div>
+			</div>
 
 			<div className='flex justify-between flex-col lg:flex-row'>
-				<div className='flex flex-col lg:w-1/4 w-full'>
+				<div className='sticky top-0 z-1 bg-white flex flex-col lg:w-1/4 w-full'>
 					<div className='sticky top-20'>
-						<div className=' lg:min-h-[80vh] justify-end'>
+						<div className=' sticky h-[70px] z-1 -top-20 lg:min-h-[80vh] justify-end overflow-hidden'>
 							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 lg:h-[80vh] lg:flex-col items-end lg:pb-6'>
 								<div className='lg:flex hidden items-center shrink-0 lg:justify-end mb-4 mr-2 '>
 									<div className='relative'>
@@ -214,7 +256,7 @@ export default function Menu() {
 								{menuList?.categories?.map((data, k) => (
 									<p
 										id={`category-${data.id}`}
-										className='text-right px-5 py-2 cursor-pointer'
+										className='text-right px-5 py-2 cursor-pointer flex items-center shrink-0 lg:justify-end'
 										key={k}
 										onClick={() => gotoSelected(`list-${data.id}`)}
 									>
@@ -226,88 +268,203 @@ export default function Menu() {
 					</div>
 				</div>
 				<div className='flex flex-col flex-1 '>
-					<div className='lg:m-5'>
-						{productList?.categories?.map((data, k) => (
-							<div className='text-black' key={k} id={`list-${data.id}`}>
-								<Waypoint
-									onEnter={() => addClass(`category-${data.id}`)}
-									onLeave={() => removeClass(`category-${data.id}`)}
-								/>
-								<h5 className='text-black text-center py-3 bg-[#ffffb7]'>
-									{data.name_json.english}
-								</h5>
-								{data.products.map((pro, p) => (
-									<div
-										key={p}
-										className='flex justify-between border-t-2 px-3 my-4 hover:shadow-md hover:ease-in-out'
-									>
-										<div className='flex flex-col mt-3 w-8/12'>
-											{pro.is_popular ? (
-												<div className='mb-2 max-w-[70px] text-white bg-black py-[1px] rounded flex items-center justify-center gap-1'>
-													<FiStar size={12} color='white' className='mr-1' />
-													<span className='text-xs text-white font-normal'>
-														Popular
-													</span>
-												</div>
-											) : null}
-											<h5 className='mb-1'>{pro.name_json.english}</h5>
-											<small className='mr-5'>
-												{pro.description_json.english}
-											</small>
-											<p>
-												<strong>{pro.price} €</strong>
-											</p>
-										</div>
-										<div className='flex'>
-											{pro.image && (
-												<img
-													src={pro.image}
-													alt='product images'
-													className='product-images'
-												/>
-											)}
-											{findProduct(cart, pro.id) ? (
-												<div className='flex '>
-													<div className='flex rounded'>
-														<button
-															onClick={() =>
-																dispatch(decrementQuantity(pro.id))
-															}
-															className='bg-[#ffee32] flex flex-wrap w-[36px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
-														>
-															<FaMinus color='black' />
-														</button>
-														<button className='bg-[#ffee32] flex flex-wrap w-[22px] h-[40px] justify-center items-center  self-center font-bold transition-all duration-200 overflow-hidden '>
-															{findProduct(cart, pro.id).quantity}
-														</button>
-														<button
-															onClick={() =>
-																dispatch(incrementQuantity(pro.id))
-															}
-															className='bg-[#ffee32] flex flex-wrap w-[36px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
-														>
-															<FaPlus color='black' />
-														</button>
+					<div className='lg:m-5 m-6'>
+						{productList &&
+							productList?.categories?.map((data, k) => (
+								<div className='text-black' key={k} id={`list-${data.id}`}>
+									<Waypoint
+										onEnter={() => addClass(`category-${data.id}`)}
+										onLeave={() => removeClass(`category-${data.id}`)}
+									/>
+									<h5 className='text-black text-center py-3 bg-[#ffffb7]'>
+										{data.name_json.english}
+									</h5>
+									{data.products.map((pro, p) => (
+										<div
+											key={p}
+											className='flex justify-between border-t-2 px-3 my-4 hover:shadow-md hover:ease-in-out'
+										>
+											<div className='flex flex-col mt-3 w-8/12'>
+												{pro.is_popular ? (
+													<div className='mb-2 max-w-[70px] text-white bg-black py-[1px] rounded flex items-center justify-center gap-1'>
+														<FiStar size={12} color='white' className='mr-1' />
+														<span className='text-xs text-white font-normal'>
+															Popular
+														</span>
 													</div>
-												</div>
-											) : (
-												<button
-													type='button'
-													onClick={() => dispatch(addToCart(pro))}
-													className='bg-[#ffee32] flex flex-wrap w-[86px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
-												>
-													ADD {console.log(findProduct(cart, pro.id))}
-												</button>
-											)}
+												) : null}
+												<h5 className='mb-1'>{pro.name_json.english}</h5>
+												<small className='mr-5'>
+													{pro.description_json.english}
+												</small>
+												<p>
+													<strong>{pro.price} €</strong>
+												</p>
+											</div>
+											<div className='flex'>
+												{pro.image && (
+													<img
+														src={pro.image}
+														alt='product images'
+														className='product-images'
+													/>
+												)}
+												{findProduct(cart, pro.id) ? (
+													<div className='flex '>
+														<div className='flex rounded'>
+															<button
+																onClick={() =>
+																	dispatch(decrementQuantity(pro.id))
+																}
+																className='bg-[#ffee32] flex flex-wrap w-[36px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
+															>
+																<FaMinus color='black' />
+															</button>
+															<button className='bg-[#ffee32] flex flex-wrap w-[22px] h-[40px] justify-center items-center  self-center font-bold transition-all duration-200 overflow-hidden '>
+																{findProduct(cart, pro.id).quantity}
+															</button>
+															<button
+																onClick={() =>
+																	dispatch(incrementQuantity(pro.id))
+																}
+																className='bg-[#ffee32] flex flex-wrap w-[36px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
+															>
+																<FaPlus color='black' />
+															</button>
+														</div>
+													</div>
+												) : (
+													<button
+														type='button'
+														onClick={() => dispatch(addToCart(pro))}
+														className='bg-[#ffee32] flex flex-wrap w-[86px] h-[40px] justify-center items-center rounded-md self-center font-bold transition-all duration-200 overflow-hidden '
+													>
+														ADD
+													</button>
+												)}
+											</div>
 										</div>
-									</div>
-								))}
-							</div>
-						))}
+									))}
+								</div>
+							))}
 					</div>
 				</div>
 				<div className='flex flex-col lg:w-1/3 w-full'>
-					<div className='sticky top-20'>
+					{cart.length > 0 ? (
+						<div className=''>
+							{showOrders ? (
+								<div className='fixed left-0 right-0  w-full flex justify-between p-2 items-center z-30 lg:hidden bg-white relative'>
+									<a
+										className='font-semibold flex items-center p-2 fixed z-30 bottom-[15px] left-[8px] right-[8px] rounded h-[50px] bg-[#ffee32]'
+										type='button'
+									>
+										<div className='flex w-full flex-1 items-center'>
+											<span className='relative'>
+												<FiShoppingBag color='black' size={25} />
+												<span className='absolute font-bold text-[10px] rounded-full bottom-[1px] right-[-6px] w-4 h-4 bg-white flex items-center justify-center animate-bounce'>
+													{cart.length > 0 ? cart.length : '0'}
+												</span>
+											</span>
+											<p className='w-full flex justify-between items-center'>
+												<span className='font-bold flex-1 text-center'>
+													Go to checkout
+												</span>
+												<span className='text-sm font-semibold'>
+													{getTotalPrice()} €
+												</span>
+											</p>
+										</div>
+									</a>
+								</div>
+							) : (
+								<button
+									className='lg:hidden font-semibold flex items-center p-2 rounded bg-[#ffee32] fixed z-30 bottom-[15px] left-[8px] right-[8px] h-[50px]'
+									type='button'
+									onClick={() => setShowOrders(true)}
+								>
+									<div className='flex w-full flex-1 items-center'>
+										<span className='relative'>
+											<FiShoppingBag color='black' size={25} />
+											<span className='absolute font-bold text-[10px] rounded-full bottom-[1px] right-[-6px] w-4 h-4 bg-white flex items-center justify-center animate-bounce'>
+												{cart.length > 0 ? cart.length : '0'}
+											</span>
+										</span>
+										<p className='w-full flex justify-between items-center'>
+											<span className='font-bold flex-1'>View order</span>{' '}
+											<span className='text-sm'>{getTotalPrice()} €</span>
+										</p>
+									</div>
+								</button>
+							)}
+							<div
+								className={`fixed ${
+									showOrders ? 'translate-y-0' : 'translate-y-[600px]'
+								} z-20 -bottom-[15%] left-0 right-0 p-2 bg-white  transition-all duration-500 rounded-lg`}
+							>
+								<div className='flex justify-between items-center py-4'>
+									<h3 className='font-bold text-xl'>Your Order</h3>
+									<button
+										type='button'
+										onClick={() => setShowOrders(false)}
+										className='p-2 rounded-full border w-8 h-8 flex justify-center items-center bg-black text-white'
+									>
+										<FaTimes color={'white'} size={20} />
+									</button>
+								</div>
+								<div className='relative h-[500px] bg-white w-full overflow-y-auto'>
+									<div className='max-h-[80%] border-b-2 border-gray-300 pb-2 overflow-y-auto'>
+										<div className='overflow-y-auto'>
+											{cart.map((item, key) => (
+												<div
+													key={key}
+													className='flex items-center justify-between m-0 mr-3 py-1 lg:py-2 '
+													title=''
+												>
+													<div className='w-9/12 pr-2 align-left'>
+														<p className='p-0 m-0 text-sm sm:text-md font-semibold '>
+															{item.name_json.english}
+														</p>
+													</div>
+													<div className='w-4/12'>
+														<div className='flex items-center justify-between gap-1'>
+															<button
+																type='button'
+																onClick={() =>
+																	dispatch(decrementQuantity(item.id))
+																}
+																className='text-sm flex items-center justify-center text-white bg-black p-1'
+															>
+																<FiMinus color='white' />
+															</button>
+															<span className='text-lg px-2 '>
+																{item.quantity}
+															</span>
+															<button
+																type='button'
+																onClick={() =>
+																	dispatch(incrementQuantity(item.id))
+																}
+																className='text-sm flex items-center justify-center text-white bg-black p-1'
+															>
+																<FiPlus color='white' />
+															</button>
+														</div>
+													</div>
+													<p className='p-0 m-0 w-4/12 text-sm text-right font-semibold '>
+														{item.price} €
+													</p>
+												</div>
+											))}
+										</div>
+									</div>
+								</div>
+							</div>
+							{showOrders ? (
+								<div className='bg-black opacity-30 fixed top-0 left-0 right-0 bottom-0 z-[10] h-screen'></div>
+							) : null}
+						</div>
+					) : null}
+					<div className='sticky hidden lg:block top-20'>
 						<h4 className='text-center'>Your Cart</h4>
 						<div className=' min-h-[80vh]'>
 							<div className='flex overflow-auto pl-4 b-2 lg:pl-0 h-[95vh] flex-col lg:pb-6'>

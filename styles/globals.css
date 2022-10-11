@@ -249,6 +249,11 @@ b,
 strong {
 	font-weight: bolder;
 }
+
+/* hide scrollbar for chrome, safari and opera */
+-webkit-scrollbar {
+	display: none;
+}
 .small,
 small {
 	font-size: 0.875em;
