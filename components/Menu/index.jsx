@@ -353,7 +353,7 @@ export default function Menu() {
 					{cart.length > 0 ? (
 						<div className=''>
 							{showOrders ? (
-								<div className='fixed left-0 right-0  w-full flex justify-between p-2 items-center z-30 lg:hidden bg-white relative'>
+								<div className='fixed left-0 right-0  w-full flex justify-between p-2 items-center  lg:hidden bg-white relative'>
 									<a
 										className='font-semibold flex items-center p-2 fixed z-30 bottom-[15px] left-[8px] right-[8px] rounded h-[50px] bg-[#ffee32]'
 										type='button'
